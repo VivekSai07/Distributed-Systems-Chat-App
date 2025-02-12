@@ -573,7 +573,7 @@ class Server():
             message_parts = bytesAddressPair[1].decode().split("-")
             message_to_send = message_parts[3]
             user_name = message_parts[5]
-            print(f"💬 New message in chatroom {chatroom_inport} 📲 from {bytesAddressPair[0]} (User:{user_name}) : {message_to_send} 📝")
+            print(f"\n 💬 \033[1;31m New message in chatroom {chatroom_inport} 📲 from {bytesAddressPair[0]} (User:{user_name}) : {message_to_send} \033[0m 📝\n")
             # print(f"💬 New message in chatroom {chatroom_inport} 📲 from {bytesAddressPair[0]}: {bytesAddressPair[1].decode()} 📝")
             message_from_client = bytesAddressPair[1].decode('utf-8')
             from_client_ip = bytesAddressPair[0][0]
@@ -590,7 +590,7 @@ class Server():
                         to_client_ip = actual_client['IP']
                         to_client_port = actual_client['outPorts']
                         thread = threading.Thread(target=self.writeToClient_with_ack,
-                                                args=(message+"-"+vc+"-"+from_client_ip+"-"+userName, to_client_ip, to_client_port, from_client_ip,chatroom_inport,chatroom_outport,))
+                                                  args=(message+"-"+vc+"-"+from_client_ip+"-"+userName, to_client_ip, to_client_port, from_client_ip,chatroom_inport,chatroom_outport,))
                         thread.start()
                         thread.join()
             print("ACKcount_a", self.ACKCounter[from_client_ip][chatroom_inport])
