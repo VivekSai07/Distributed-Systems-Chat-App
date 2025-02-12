@@ -64,7 +64,6 @@ class Server():
         ServerSocket_UDP.close()
 
     def acptLogin(self, server):
-        
         while True:
             try:
                 if self.is_leader == False:
@@ -87,7 +86,7 @@ class Server():
                 send_group_view_to_client = pickle.dumps(new_group_view_without_leader)
                 self.sendMsg(newUser['IP'], send_group_view_to_client)
                 ServerSocket_UDP = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-                ServerSocket_UDP.bind((localIP, localPort))  # changed_remove
+                ServerSocket_UDP.bind((localIP, localPort))
                 ServerSocket_UDP.settimeout(10)
                 print("Waiting for client responses to join the chatroom...")
                 data = self.BCListener(ServerSocket_UDP, 'client')
@@ -157,7 +156,7 @@ class Server():
                     self.leader_id = server['serverID']
             self.strtElection(server)
         else:
-            print(f"🚀 Leadership acquired! I am the new leader (IP: {self.ip_address}).")
+            print(f"🚀 \033[1;31mLeadership acquired! I am the new leader (IP: {self.ip_address}).\033[0m")
             self.leader = self.ip_address
             self.is_leader = True
             self.group_view.append({"serverID": 0, "IP" : self.ip_address, "chatrooms_handled" : [{"inPorts": [6000], "outPorts": [6001], 'clients_handled':[]}],'heartbeat_port':4444})
@@ -179,7 +178,6 @@ class Server():
             new_inport = max(current_ports) + 1
             new_outport = new_inport + 1
         return [new_inport],[new_outport]
-
 
     def acptJoin(self, server):
         while True:
@@ -206,7 +204,6 @@ class Server():
                 LeaderSS.close()
                 if self.is_leader:
                     self.acptJoin(server)
-
 
     def send_to_clients_new_server(self,chatroom,new_server_ip):
         for clients in chatroom['clients_handled']:
@@ -264,7 +261,7 @@ class Server():
         if len(self.server_list) == 1:
                 self.leader = self.ip_address
                 self.is_leader = True
-                print(f"🚀 Leadership acquired! I am the new leader (IP: {self.ip_address}).")
+                print(f"🚀 \033[1;31mLeadership acquired! I am the new leader (IP: {self.ip_address}).\033[0m")
                 return
         ring = self.ring_formation(self.server_list)
         neighbour = self.fetch_neighbour(ring, self.ip_address,'left')
@@ -329,7 +326,7 @@ class Server():
                 }
                 ringSocket.sendto(pickle.dumps(new_election_message),(neighbour,5892))
                 print("Send election Message(case5) ", new_election_message, " to ", neighbour, " at ", time.time())
-                print(f"🚀 Leadership acquired! I am the new leader (IP: {self.ip_address}).")
+                print(f"🚀 \033[1;31mLeadership acquired! I am the new leader (IP: {self.ip_address}).\033[0m")
                 participant = False
                 ringSocket.close()
 
@@ -413,11 +410,11 @@ class Server():
                     return True
                 if listen_heartbeat:
                     if listen_heartbeat[1] == b'HB_received':
-                        print("\nServer {} is alive:".format(listen_heartbeat[0][0]))
+                        print("\n\033[92mServer {} is alive:\033[0m".format(listen_heartbeat[0][0]))
                         self.hbList[listen_heartbeat[0][0]] = 0     
                 else:
                     if self.hbList[server_ip] > 3:   
-                        print("\nServer {} {} is dead:".format(server_ip,server_id))
+                        print("\n\033[92mServer {} {} is dead:\033[0m".format(server_ip, server_id))
                         self.hbList[server_ip] = 0  
                         new_group_view = []
                         new_client_list = None
@@ -445,9 +442,9 @@ class Server():
                                     continue
                                 else:
                                     min_cli = min(len(chatrooms['clients_handled']),min_cli)
-                        print("\n--- New Client List After Server Down ---")
-                        print(new_client_list)
-                        print("\n--- New Group View After Server Down ---")
+                        # print("\n New Client List After Server Down")
+                        # print(new_client_list)
+                        print("\n\033[94m New Group View After Server Down \033[0m")
                         print(json.dumps(self.convert_sets(self.group_view), indent=4))
                         new_group_view = pickle.dumps(self.group_view)
                         self.send_to_all_servers(dummy_server, new_group_view, 5044)
