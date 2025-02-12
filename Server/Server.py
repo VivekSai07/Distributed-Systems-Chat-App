@@ -516,13 +516,9 @@ class Server():
 
     def parse_client_message(self, client_recv_data):
         data_list = client_recv_data.split("-")
-        client_id = data_list[0]
-        client_req = data_list[1]
-        chatroom_id = data_list[2]
         client_message = data_list[3]
         vc = data_list[4]
         userName = data_list[5]
-        client_port_out = data_list[-2]
         client_port = data_list[-1]
         return [client_message,vc,userName, client_port]
 
