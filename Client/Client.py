@@ -24,7 +24,7 @@ class Client:
         """
         Handles post-login functionality, including chatroom input/output.
         """
-        selection = input("Which window you prefer to enter? \n 1️⃣ Output Window \n 2️⃣ Input Window \n")
+        selection = input("Which window you prefer to enter? \n 1️⃣\t Output Window \n 2️⃣\t Input Window \n")
         if selection == '1':
             hold_back_processing_thread = threading.Thread(target=self.chatroom.hold_back_processing, args=())
             hold_back_processing_thread.start()
